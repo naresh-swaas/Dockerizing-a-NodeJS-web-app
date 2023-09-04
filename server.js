@@ -1,1 +1,1 @@
-console.log("Created Sample node for AWS Batch.");
+console.log("Simple Node Console app deployed on AWS Batch Job.");
