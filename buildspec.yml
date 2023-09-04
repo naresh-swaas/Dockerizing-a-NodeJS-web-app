@@ -6,7 +6,7 @@ phases:
       - AWS_ACCOUNT_ID="396674985897"
       - AWS_DEFAULT_REGION="ap-south-1"
       - IMAGE_REPO_NAME="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"
-      - IMAGE_TAG="latest"
+      - IMAGE_TAG="samplenode"
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
   build:
