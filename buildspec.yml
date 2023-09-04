@@ -1,25 +1,22 @@
 version: 0.2
 
-
 phases:
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR... 
-      - aws --version
-      - aws ecr get-login-password --region ap-south-1
-      - REPOSITORY_URI="396674985897.dkr.ecr.ap-south-1.amazonaws.com/nodedockerbuild"
+      - AWS_ACCOUNT_ID="396674985897"
+      - AWS_DEFAULT_REGION="ap-south-1"
+      - IMAGE_REPO_NAME="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"
+      - IMAGE_TAG="latest"
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
   build:
     commands:
       - echo Build started on `date`
-      - echo Building the Docker image...
-      - docker build -t 396674985897.dkr.ecr.ap-south-1.amazonaws.com/nodedockerbuild:latest .
-      - docker tag 396674985897.dkr.ecr.ap-south-1.amazonaws.com/nodedockerbuild:latest 396674985897.dkr.ecr.ap-south-1.amazonaws.com/nodedockerbuild:latest
+      - echo Building the Docker image...          
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/nodedockerbuild:$IMAGE_TAG      
   post_build:
     commands:
       - echo Build completed on `date`
-      - echo Pushing the Docker images...
-      - docker push 396674985897.dkr.ecr.ap-south-1.amazonaws.com/nodedockerbuild:latest
-      - echo Writing image definitions file...
-      - cat imagedefinitions.json 
-artifacts:
-    files: imagedefinitions.json
+      - echo Pushing the Docker image...
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/nodedockerbuild:$IMAGE_TAG
