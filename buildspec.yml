@@ -6,7 +6,8 @@ phases:
     commands:
       - echo Logging in to Amazon ECR... 
       - aws --version
-      - $(aws ecr get-login-password --region ap-south-1 --no-include-email)
+      # - $(aws ecr get-login-password --region ap-south-1 --no-include-email)
+      - $(aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin DOCKER_ID.dkr.ecr.ap-south-1.amazonaws.com)
       - REPOSITORY_URI=396674985897.dkr.ecr.ap-south-1.amazonaws.com/nodedockerbuild
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
